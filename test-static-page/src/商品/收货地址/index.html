@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <script src="/js/jquery-2.1.4/jquery.js?v=1da1ab30afcd628"></script>
+  <link href="/UpLoad/Files/202312/AACAGHivYBA.css" rel="stylesheet">
+  <script src="/UpLoad/Files/202312/AACA7IuvYBA.js"></script>
+</head>
+
+<body>
+  <style type="text/less">
+    .l-order {
+      .l-order-container {
+        width: 1200px;
+        margin: auto;
+        padding: 20px;
+
+        .box {
+          margin-top: 20px;
+          border-radius: 10px;
+          padding: 20px 30px;
+          box-shadow: 0 0px 5px rgb(191, 191, 191);
+
+          .box-title {
+            color: red;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            font-size: 15px;
+          }
+
+          .box-title::before {
+            content: '';
+            display: inline-block;
+            background-color: red;
+            width: 4px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 2px;
+          }
+
+          .address-content {
+            width: 60%;
+            margin: auto;
+          }
+
+          .address-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+          }
+
+          .layui-form-label {
+            width: 100px;
+          }
+        }
+      }
+    }
+  </style>
+  <div class="l-order">
+    <div class="l-order-container">
+      <div style="opacity: 0.75; font-weight: bold; cursor: pointer;" onclick="window.history.go(-1)">&lt;&lt; <span
+          style="color: red;">返回</span></div>
+      <div class="box">
+        <div class="box-title">编辑地址</div>
+        <div class="address-content">
+          <form class="layui-form" lay-filter="demo-val-filter" id="addressForm">
+            <div class="layui-form-item"><label class="layui-form-label">姓名</label>
+              <div class="layui-input-block"><input type="text" name="name" lay-verify="required" placeholder="请输入"
+                  autocomplete="off" class="layui-input" /></div>
+            </div>
+            <div class="layui-form-item"><label class="layui-form-label">手机号</label>
+              <div class="layui-input-block"><input type="tel" name="mobile" lay-verify="required|phone"
+                  placeholder="请填写手机号" autocomplete="off" class="layui-input" /></div>
+            </div>
+            <div class="layui-form-item">
+              <div class="layui-inline"><label class="layui-form-label">省份</label>
+                <div class="layui-input-block"><select name="province" lay-filter="province"></select></div>
+              </div>
+              <div class="layui-inline"><label class="layui-form-label">市区</label>
+                <div class="layui-input-block"><select name="city" lay-filter="city"></select></div>
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <div class="layui-inline" id="country"><label class="layui-form-label">区（县）</label>
+                <div class="layui-input-block"><select name="country" lay-filter="country"></select></div>
+              </div>
+              <!-- <div class="layui-inline">
+                            <label class="layui-form-label">街道</label>
+                            <div class="layui-input-block">
+                              <select name="street" lay-filter="street"></select>
+                            </div>
+                        </div> -->
+            </div>
+            <div class="layui-form-item layui-form-text"><label class="layui-form-label">详细地址</label>
+              <div class="layui-input-block"><textarea name="detail" placeholder="请输入内容" lay-verify="required"
+                  class="layui-textarea"></textarea></div>
+            </div>
+            <div class="layui-form-item">
+              <div class="layui-input-block"><button type="submit" class="layui-btn"
+                  style="background-color: red; border-radius: 10px;" lay-submit="" lay-filter="demo1">确认</button>
+                <button type="reset" class="layui-btn" style="border-radius: 10px;" lay-submit=""
+                  lay-filter="demo2">取消</button></div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-title">地址管理</div>
+        <div data-name="addressList"></div>
+      </div>
+      <script>
+        // 设置title
+        document.title = '典佑商城'
+        let youFengToken = null;
+        let userInfo = null
+        //判断登录
+        $.post("/Basket/Index", function (data) {
+          //没有登录
+          if (data.location) {
+            youFengToken = null;
+            const pathname = window.location.pathname.split("/");
+            // 跳转至登录页面
+            window.location = "/account/signin?returnUrl=/product/" + pathname[pathname.length - 1]
+          }
+          //已经登录
+          else {
+            youFengToken = localStorage.getItem('youFengToken');
+            // 获取用户详情
+            $.ajax({
+              url: '/api/GetPersonalInformation',
+              type: "GET",
+              headers: {
+                TokenValue: youFengToken
+              },
+              success(res) {
+                userInfo = res.data[0]
+                getAddressList()
+              }
+            })
+          }
+        });
+
+
+
+        // 获取地址列表
+        let addressList = []
+        const getAddressList = () => {
+          $.ajax({
+            url: '/api/GetAddAddress?userid=' + userInfo.userID,
+            type: "GET",
+            headers: {
+              TokenValue: youFengToken,
+            },
+            success(res) {
+              addressList = res.data
+              let addressListHtml = ''
+              if (res.data && res.data.length) {
+                res.data.forEach((item, i) => {
+                  addressListHtml += `
+                            <div class="address-line">
+                                <div style="width: 60%;">
+                                    <div style="display: flex;font-weight: bold;gap: 20px;align-items: center;font-size: 15px;;">
+                                        ${item.name} <div>${item.mobile}</div>
+                                    </div>
+                                    <div style="opacity: 0.75;margin-top: 10px;">
+                                        ${item.province}${item.city}${item.country}${item.detail}
+                                    </div>
+                                </div>
+                                <div onclick="editAddressBtn(${i})" style="display: flex;align-items: center;gap: 5px;cursor: pointer;">
+                                    <svg width="20" height="20" t="1701427636303" class="icon" viewBox="0 0 1061 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5274"><path d="M877.714 475.429v402.286c0 40.396-32.747 73.143-73.143 73.143H146.285c-40.396 0-73.143-32.747-73.143-73.143V219.429c0-40.396 32.747-73.143 73.143-73.143h438.857V73.143H146.285C65.494 73.143-0.001 138.637-0.001 219.429v658.286c0 80.791 65.494 146.286 146.286 146.286h658.286c80.791 0 146.286-65.494 146.286-146.286V475.429h-73.143z" fill="#2c2c2c" p-id="5275"></path><path d="M397.897 774.217c-5.145 0.812-11.079 1.275-17.121 1.275-27.052 0-51.934-9.295-71.624-24.866-24.26-24.318-23.529-59.427-22.798-117.209 2.851-45.25 21.396-85.691 50.197-116.398L830.903 22.674c40.96-40.96 100.206-20.48 138.24 16.091 10.971 10.971 40.594 40.96 51.566 51.566 36.571 36.571 58.88 96.914 17.189 138.971L543.087 724.113c-30.205 29.593-71.086 48.391-116.341 50.093l-28.848 0.01z m-36.571-75.337c13.39 1.737 28.876 2.729 44.595 2.729 6.955 0 13.864-0.194 20.723-0.577 24.676-1.644 47.559-12.193 64.931-28.534l495.854-494.76c0.004-0.236 0.007-0.514 0.007-0.793 0-14.36-6.517-27.198-16.754-35.717-11.047-10.667-41.401-41.021-52.007-51.992-8.83-10.109-21.744-16.459-36.141-16.459l-0.454 0.002-494.423 494.446a115.687 115.687 0 0 0-28.495 66.486c-0.399 6.509-0.609 13.605-0.609 20.75 0 15.659 1.007 31.082 2.961 46.209z" fill="#2c2c2c" p-id="5276"></path></svg>
+                                    修改
+                                </div>
+                                <div onclick="deleteAddressBtn(${i})" style="color: red;cursor: pointer;">
+                                    删除地址
+                                </div>
+                                <div onclick="chooseAddressBtn(${i})" style="padding: 5px 20px;background-color: red;color: white;border-radius: 5px;cursor: pointer;">
+                                    选择
+                                </div>
+                            </div>
+                            `
+                })
+              }
+
+              $('div[data-name=addressList]').html(addressListHtml)
+            }
+          })
+        }
+
+        // 修改地址
+        let currentAddress = null
+
+        layui.use(['form'], function () {
+          var form = layui.form;
+
+          // 提交事件
+          form.on('submit(demo2)', function (data) {
+            currentAddress = null
+          });
+
+          // 获取街道数据
+          $.getJSON('/UpLoad/Files/202312/AABACcQ0ZxA.json', (town) => {
+            // 渲染省市区下拉框
+            $.getJSON("/UpLoad/Files/202312/AADAesw0ZxA.json", (data) => {
+              let pOptionsHtml = '<option value=""></option>'
+              data.forEach(p => {
+                pOptionsHtml += `<option value="${p.n}">${p.n}</option>`
+              });
+              $('select[name=province]').html(pOptionsHtml)
+              form.render('select')
+
+              let cData = []
+              const provinceOn = (value) => {
+                const p = data.find(d => d.n === value)
+                let cOptionsHtml = '<option value=""></option>'
+                if (p && p.d) {
+                  cData = p.d
+                  cData.forEach(c => {
+                    cOptionsHtml += `<option value="${c.n}">${c.n}</option>`
+                  })
+                }
+                $('#country').show()
+                $('select[name=city]').html(cOptionsHtml)
+                $('select[name=country]').html('<option value=""></option>')
+                $('select[name=street]').html('<option value=""></option>')
+                form.render('select')
+              }
+              form.on('select(province)', (province) => {
+                provinceOn(province.value)
+              })
+
+              let aData = []
+              const cityOn = (value) => {
+                const c = cData.find(d => d.n === value)
+                let aOptionsHtml = '<option value=""></option>'
+                if (c && c.d) {
+                  aData = c.d
+                  aData.forEach(c => {
+                    aOptionsHtml += `<option value="${c.n}">${c.n}</option>`
+                  })
+                }
+
+                let sOptionsHtml = '<option value=""></option>'
+                if (c) {
+                  const sData = town.filter((t) => t.code === c.c)
+                  sData.forEach(c => {
+                    sOptionsHtml += `<option value="${c.name}">${c.name}</option>`
+                  })
+                  if (sData.length) {
+                    $('#country').hide()
+                  }
+                }
+
+                $('select[name=country]').html(aOptionsHtml)
+                $('select[name=street]').html(sOptionsHtml)
+                form.render('select')
+              }
+              form.on('select(city)', (city) => {
+                cityOn(city.value)
+              })
+
+              let sData = []
+              const areaOn = (value) => {
+                const a = aData.find(d => d.n === value)
+                let sOptionsHtml = '<option value=""></option>'
+                if (a) {
+                  sData = town.filter((t) => t.code === a.c)
+                  sData.forEach(c => {
+                    sOptionsHtml += `<option value="${c.name}">${c.name}</option>`
+                  })
+                }
+                $('select[name=street]').html(sOptionsHtml)
+                form.render('select')
+              }
+              form.on('select(country)', (area) => {
+                areaOn(area.value)
+              })
+
+              // 修改地址按钮点击
+              editAddressBtn = (i) => {
+                currentAddress = addressList[i]
+                currentAddress.province && provinceOn(currentAddress.province);
+                currentAddress.city && cityOn(currentAddress.city);
+                currentAddress.country && areaOn(currentAddress.country);
+                form.val('demo-val-filter', currentAddress)
+              }
+
+              // 删除地址
+              deleteAddressBtn = (i) => {
+                const address = addressList[i]
+                $.ajax({
+                  url: '/api/DeleteAddress?id=' + address.id,
+                  headers: {
+                    TokenValue: youFengToken,
+                  },
+                  success(res) {
+                    getAddressList()
+                    layer.open({
+                      type: 1,
+                      title: false,
+                      shadeClose: true,
+                      area: ['420px', '180px'], // 宽高
+                      content: `
+                                        <div style="padding: 11px;height: 100%;display: flex;justify-content: space-around;align-items: center;box-sizing: border-box;">
+                                            <div style="display: flex;align-items: center;gap: 20px;">
+                                                <svg width="40" height="40" t="1701420372899" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4317"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m257 331.8L479.2 685.5c-15.8 15.9-41.5 15.9-57.3 0.1l-0.1-0.1L255 518.7c-15.8-15.8-15.8-41.5 0-57.3 15.8-15.8 41.5-15.8 57.3 0l138.2 138.2 261.1-261.1c15.8-15.8 41.5-15.8 57.3 0 15.9 15.8 15.9 41.5 0.1 57.3z" fill="#43B034" p-id="4318"></path></svg>
+                                                <span style="font-size: 18px;">删除成功</span>
+                                            </div>
+                                        </div>
+                                        `
+                    });
+                  }
+                })
+              }
+
+              // 选择地址
+              chooseAddressBtn = (i) => {
+                const address = addressList[i]
+                window.localStorage.setItem('address', JSON.stringify(address))
+                window.location.replace(document.referrer)
+              }
+            })
+          })
+
+          // 提交事件
+          form.on('submit(demo1)', function (data) {
+            var field = data.field; // 获取表单字段值
+            if (currentAddress) {
+              $.ajax({
+                url: '/api/EditAddress',
+                type: "POST",
+                headers: {
+                  'Content-Type': 'application/json',
+                  TokenValue: youFengToken
+                },
+                data: JSON.stringify({
+                  ...currentAddress,
+                  ...field,
+                  userid: userInfo.userID
+                }),
+                success(res) {
+                  getAddressList()
+                  layer.open({
+                    type: 1,
+                    title: false,
+                    shadeClose: true,
+                    area: ['420px', '180px'], // 宽高
+                    content: `
+                                    <div style="padding: 11px;height: 100%;display: flex;justify-content: space-around;align-items: center;box-sizing: border-box;">
+                                        <div style="display: flex;align-items: center;gap: 20px;">
+                                            <svg width="40" height="40" t="1701420372899" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4317"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m257 331.8L479.2 685.5c-15.8 15.9-41.5 15.9-57.3 0.1l-0.1-0.1L255 518.7c-15.8-15.8-15.8-41.5 0-57.3 15.8-15.8 41.5-15.8 57.3 0l138.2 138.2 261.1-261.1c15.8-15.8 41.5-15.8 57.3 0 15.9 15.8 15.9 41.5 0.1 57.3z" fill="#43B034" p-id="4318"></path></svg>
+                                            <span style="font-size: 18px;">修改成功</span>
+                                        </div>
+                                    </div>
+                                    `
+                  });
+                }
+              })
+            } else {
+              $.ajax({
+                url: '/api/AddAddress',
+                type: "POST",
+                headers: {
+                  'Content-Type': 'application/json',
+                  TokenValue: youFengToken
+                },
+                data: JSON.stringify({
+                  ...field,
+                  userid: userInfo.userID
+                }),
+                success(res) {
+                  getAddressList()
+                  layer.open({
+                    type: 1,
+                    title: false,
+                    shadeClose: true,
+                    area: ['420px', '140px'], // 宽高
+                    content: `
+                                    <div style="padding: 11px;height: 100%;display: flex;justify-content: space-around;align-items: center;box-sizing: border-box;">
+                                        <div style="display: flex;align-items: center;gap: 20px;">
+                                            <svg width="40" height="40" t="1701420372899" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4317"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m257 331.8L479.2 685.5c-15.8 15.9-41.5 15.9-57.3 0.1l-0.1-0.1L255 518.7c-15.8-15.8-15.8-41.5 0-57.3 15.8-15.8 41.5-15.8 57.3 0l138.2 138.2 261.1-261.1c15.8-15.8 41.5-15.8 57.3 0 15.9 15.8 15.9 41.5 0.1 57.3z" fill="#43B034" p-id="4318"></path></svg>
+                                            <span style="font-size: 18px;">添加成功</span>
+                                        </div>
+                                    </div>
+                                    `
+                  });
+                }
+              })
+            }
+            // 重置form
+            $("#addressForm")[0].reset()
+            currentAddress = null
+            form.render();
+            return false; // 阻止默认 form 跳转
+          });
+
+        });
+      </script>
+    </div>
+  </div>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/less.js/4.2.0/less.js"></script>
+</html>

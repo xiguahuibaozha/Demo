@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="/js/jquery-2.1.4/jquery.js?v=1da1ab30afcd628"></script>
+</head>
+
+<body>
+    <!-- 热门藏品 -->
+    <style type="text/less">
+        .hotcollection{
+            width: 1200px;
+            margin: auto;
+            text-align: left;
+    
+            .titletext{
+                position: relative;
+                
+                .title-font{
+                    font-weight: 550;
+                    font-size: 20px;
+                    position: absolute;
+                    left: 40px;
+                    top: 20px;
+                    letter-spacing: 1px;
+                }
+            }
+    
+            .content{
+                height: 350px;
+                margin-top: 35px;
+                display: flex;
+                gap: 20px;
+                justify-content: space-around;
+    
+                .left{
+                    width: 50%;
+                    height: 100%;
+                    border-radius: 8px;
+                    overflow: hidden;
+                    position: relative;
+                    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    
+                    .left-img{
+                        width: 100%;
+                        object-fit: cover;
+                        height: 100%;
+                    }
+    
+                    .msg{
+                        position: absolute;
+                        bottom: 0px;
+                        width: 100%;
+                        padding: 10px 20px;
+                        background-color: rgba(0,0,0,0.7);
+                        color: white;
+                        display: flex;
+                        gap: 10px;
+    
+                        .msg-left{
+                            width: 50%;
+    
+                            .code{
+                                margin-top: 10px;
+                                display: inline-block;
+                                padding: 3px 15px;
+                                background-color: white;
+                                border-radius: 20px;
+                                color: red;
+                                font-size: 13px;
+                            }
+                        }
+                        .msg-right{
+                            width: 50%;
+                            display: flex;
+                            align-items: center;
+                            flex-direction: column;
+                            justify-content: space-around;
+    
+                            .price{
+                                font-size: 22px;
+                                width: 100%;
+                                display: flex;
+                                justify-content: space-around;
+                                padding: 0px 60px;
+                                box-sizing: border-box;
+                            }
+    
+                            .buy-btn{
+                                padding: 3px 15px;
+                                background-color: red;
+                                color: white;
+                                border-radius: 20px;
+                                margin-top: 10px;
+                            }
+                        }
+                    }
+                }
+                .right{
+                    width: 50%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+    
+                    .right-item{
+                        height: 50%;
+                        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+                        border-radius: 8px;
+                        display: flex;
+                        overflow: hidden;
+    
+                        .right-img{
+                            height: 100%;
+                            width: 35%;
+    
+                            .img{
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                            }
+                        }
+    
+                        .right-msg{
+                            width: 65%;
+                            padding: 20px;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-between;
+    
+                            .code{
+                                display: inline-block;
+    
+                                .code-btn{
+                                    border: 1px solid red;
+                                    display: inline-block;
+                                    padding: 3px 15px;
+                                    border-radius: 20px;
+                                    font-size: 13px;
+                                    color: red;
+                                }
+                            }
+    
+                            .price{
+                                display: flex;
+                                justify-content: space-between;
+    
+                                .price-btn{
+                                    padding: 5px 20px;
+                                    border-radius: 15px;
+                                    background-color: red;
+                                    color: white;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </style>
+    <div class="hotcollection">
+    <div class="titletext"><img src="/images/youfeng/6b-y.png" />
+    <div class="title-font">热门藏品</div>
+    </div>
+    <!-- 热门藏品列表 -->
+    <div class="content" id="hotcollection-content"></div>
+    <script>
+            $(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "/api/SortProduct",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({
+                        count: 8,
+                        productcategoryID: 0
+                    }),
+                    success: function (res) {
+                        console.log('res', res);
+                        const hotCollectionContentHtml = `
+                        <div class="left">
+                            <a href="/product/detail/${res.data[0].url}">
+                                <img class="left-img" src="${res.data[0].imageUrl.replace('~', '')}" />
+                            </a>
+                            <div class="msg">
+                                <div class="msg-left">
+                                    <div style="font-weight: 600;">${res.data[0].title}</div>
+                                    <div class="code">
+                                        ${res.data[0].code}
+                                    </div>
+                                </div>
+                                <div class="msg-right">
+                                    <div class="price">RMB <span style="font-weight: bold;border-bottom: 1px solid white;">${res.data[0].price}</span></div>
+                                    <a href="/product/detail/${res.data[0].url}" style="text-decoration: none;">
+                                        <div class="buy-btn" onclick="() => {
+                                            window.
+                                        }">
+                                            立即购买
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <div class="right-item">
+                                <a class="right-img" href="/product/detail/${res.data[1].url}">
+                                    <img class='img' src="${res.data[1].imageUrl.replace('~', '')}" />
+                                </a>
+                                <div class="right-msg">
+                                    <div style="font-size: 18px;font-weight: bold;letter-spacing: 1px;">${res.data[1].title}</div>
+                                    <div class="code">
+                                        <span class="code-btn">${res.data[1].code}</span>
+                                    </div>
+                                    <div class="price">
+                                        <div>
+                                            RMB <span style="margin-left: 20px;font-weight: bold;font-size: 18px;border-bottom: 1px solid black;">${res.data[1].price}</span>
+                                        </div>
+                                        <a href="/product/detail/${res.data[1].url}" style="text-decoration: none;">
+                                            <div class="price-btn">立即购买</div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right-item">
+                                <a class="right-img" href="/product/detail/${res.data[2].url}">
+                                    <img class='img' src="${res.data[2].imageUrl.replace('~', '')}" />
+                                </a>
+                                <div class="right-msg">
+                                    <div style="font-size: 18px;font-weight: bold;letter-spacing: 1px;">${res.data[2].title}</div>
+                                    <div class="code">
+                                        <span class="code-btn">${res.data[2].code}</span>
+                                    </div>
+                                    <div class="price">
+                                        <div>
+                                            RMB <span style="margin-left: 20px;font-weight: bold;font-size: 18px;border-bottom: 1px solid black;">${res.data[2].price}</span>
+                                        </div>
+                                        <a href="/product/detail/${res.data[2].url}" style="text-decoration: none;">
+                                            <div class="price-btn">立即购买</div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        `
+                        $("#hotcollection-content").html(hotCollectionContentHtml)
+                    }
+                });
+            })
+        </script>
+    </div>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/less.js/4.2.0/less.js"></script>
+</html>

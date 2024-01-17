@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="/js/jquery-2.1.4/jquery.js?v=1da1ab30afcd628"></script>
+</head>
+<body>
+    <!-- 优质封片 -->
+    <style type="text/less">
+        .sealfilm {
+            width: 1200px;
+            text-align: left;
+            margin: 30px auto;
+
+            .titletext {
+                position: relative;
+
+                .title-font {
+                    font-weight: 550;
+                    font-size: 20px;
+                    position: absolute;
+                    left: 40px;
+                    top: 20px;
+                    letter-spacing: 1px;
+                }
+            }
+
+            .content {
+                margin-top: 35px;
+                display: flex;
+                gap: 20px;
+                flex-wrap: wrap;
+
+                .item {
+                    border-radius: 10px;
+                    overflow: hidden;
+                    width: calc(25% - 20px);
+                    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+                    .item-image {
+                        height: 200px;
+                        width: 100%;
+                        object-fit: cover;
+                    }
+
+                    .item-msg {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+                        width: 100%;
+                        text-align: center;
+                        margin: 10px 0px;
+                    }
+
+                    .item-btn {
+                        display: inline-block;
+                        padding: 5px 20px;
+                        border-radius: 15px;
+                        background-color: red;
+                        color: white;
+                        font-size: 14px;
+                    }
+                }
+            }
+        }
+    </style>
+    <div class="sealfilm">
+        <div class="titletext"><img src="/images/youfeng/6b-y.png" />
+            <div class="title-font">优质封片</div>
+        </div>
+        <div class="content" id="sealfilm-content"></div>
+    </div>
+    <p>
+        <script>
+            $(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: "/api/SortProduct",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({
+                        count: 6,
+                        productcategoryID: 6
+                    }),
+                    success: function (res) {
+                        let htmlStr = ""
+                        $.each(res.data, function (i, n) {
+                            htmlStr += `
+                    <div class="item">
+                        <a href="/product/detail/${n.url}">
+                            <img class="item-image" src="${n.imageUrl.replace('~', '')}">
+                        </a>
+                        <div class="item-msg">
+                            <div style="font-size: 14px;font-weight: bold;">${n.title}</div>
+                            <div>
+                                RMB
+                                <span style="margin-left: 20px;border-bottom: 1px solid red;color: red;">${n.price}</span>
+                            </div>
+                            <div>
+                                <a href="/product/detail/${n.url}" style="text-decoration: none;">
+                                    <div class="item-btn">立即购买</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    `
+                        })
+                        // 将组合好的html结构插入页面
+                        $("#sealfilm-content").html(htmlStr)
+                    }
+                });
+            })
+        </script>
+    </p>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/less.js/4.2.0/less.js"></script>
+</html>

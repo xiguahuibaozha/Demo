@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <script src="/js/jquery-2.1.4/jquery.js?v=1da1ab30afcd628"></script>
+  <link href="/UpLoad/Files/202312/AACAGHivYBA.css" rel="stylesheet">
+  <script src="/UpLoad/Files/202312/AACA7IuvYBA.js"></script>
+</head>
+
+<body>
+  <style type="text/less">
+    .l-order {
+
+      .layui-form input[type=checkbox],
+      .layui-form input[type=radio],
+      .layui-form select {
+        display: block;
+      }
+
+      .l-order-container {
+        width: 1200px;
+        margin: auto;
+        padding: 20px;
+
+        .box {
+          margin-top: 20px;
+          border-radius: 10px;
+          padding: 20px 30px;
+          box-shadow: 0 0px 5px rgb(191, 191, 191);
+
+          .box-title {
+            color: red;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            font-size: 15px;
+          }
+
+          .box-title::before {
+            content: "";
+            display: inline-block;
+            background-color: red;
+            width: 4px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 2px;
+          }
+
+          .address-content {
+            display: flex;
+            font-size: 16px;
+            align-items: flex-start;
+          }
+
+          .layui-table {
+            color: black;
+            margin-bottom: 0px;
+
+            .l-thead {
+              font-weight: bold;
+            }
+          }
+
+          .layui-table th {
+            font-weight: bold;
+            font-size: 15px;
+            padding: 12px 15px;
+            border-width: 0px;
+          }
+
+          .total {
+            display: flex;
+            justify-content: flex-end;
+            gap: 30px;
+            align-items: flex-end;
+            background-color: #f2f2f2;
+            padding: 8px 20px;
+          }
+        }
+
+        .pay-mode {
+          display: flex;
+          gap: 30px;
+
+          .pay-btn {
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-left: auto;
+            background-color: red;
+            cursor: pointer;
+          }
+        }
+
+        .pay-mode div {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+      }
+    }
+
+    .l-box {
+      margin-top: 20px;
+      border-radius: 10px;
+      padding: 10px 30px;
+
+      .l-box-title {
+        color: red;
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        letter-spacing: 2px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        font-size: 15px;
+      }
+
+      .l-box-title::before {
+        content: "";
+        display: inline-block;
+        background-color: red;
+        width: 4px;
+        height: 20px;
+        margin-right: 10px;
+        border-radius: 2px;
+      }
+
+      .l-box-msg {
+        margin: auto;
+        width: 400px;
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: #f2f2f2;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+    }
+  </style>
+  <div class="l-order">
+    <link href="/UpLoad/Files/202312/AACAGHivYBA.css" rel="stylesheet" />
+    <script src="/UpLoad/Files/202312/AACA7IuvYBA.js"></script>
+    <div class="l-order-container">
+      <div style="opacity: 0.75; font-weight: bold;">商品 &gt;&gt; <span style="color: red;">订单支付</span></div>
+      <div class="box">
+        <div class="box-title" style="position: relative;"><span>收货地址</span>
+          <div style="position: absolute; right: 0px; cursor: pointer;" onclick="runToAddress()">编辑地址</div>
+        </div>
+        <div class="address-content" id="address"></div>
+      </div>
+      <div class="box">
+        <div class="box-title">订单确认</div>
+        <table class="layui-table" lay-skin="nob">
+          <colgroup>
+            <col />
+            <col width="150" />
+            <col width="150" />
+            <col width="150" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>商品名称</th>
+              <th>单价</th>
+              <th>数量</th>
+              <th>金额</th>
+            </tr>
+          </thead>
+          <tbody data-name="product"></tbody>
+        </table>
+        <div class="total" data-name="total"></div>
+      </div>
+      <div class="box pay-mode layui-form">
+        <div><input type="radio" name="payMode" value="0" disabled="disabled" lay-filter="pay-radio-filter" />
+          <div lay-radio=""><svg width="15" height="15" t="1701427857266" class="icon" viewbox="0 0 1024 1024"
+              version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6279">
+              <path
+                d="M860.16 0C950.272 0 1024 73.889684 1024 164.163368v531.509895s-32.768-4.122947-180.224-53.355789c-40.96-14.362947-96.256-34.896842-157.696-57.478737 36.864-63.595789 65.536-137.485474 86.016-215.444211h-202.752v-71.841684h247.808V256.512h-247.808V135.437474h-100.352c-18.432 0-18.432 18.458947-18.432 18.458947v104.663579H200.704v41.040842h249.856v69.793684H243.712v41.013895H645.12c-14.336 51.307789-34.816 98.519579-57.344 141.608421-129.024-43.115789-268.288-77.985684-356.352-55.403789-55.296 14.362947-92.16 38.992842-112.64 63.595789-96.256 116.978526-26.624 295.504842 176.128 295.504842 120.832 0 237.568-67.718737 327.68-178.526316C757.76 742.858105 1024 853.692632 1024 853.692632v6.144C1024 950.110316 950.272 1024 860.16 1024H163.84C73.728 1024 0 950.137263 0 859.836632V164.163368C0 73.889684 73.728 0 163.84 0h696.32zM268.126316 553.121684c93.049263-10.374737 180.062316 26.974316 283.270737 78.874948-74.886737 95.501474-165.941895 155.701895-256.970106 155.701894-157.830737 0-204.368842-126.652632-125.466947-197.200842 26.300632-22.851368 72.838737-35.301053 99.166316-37.376z"
+                fill="#00A0EA" p-id="6280"></path>
+            </svg> 支付宝支付</div>
+        </div>
+        <div><input type="radio" name="payMode" value="1" lay-filter="pay-radio-filter" />
+          <div lay-radio=""><svg width="18" height="18" t="1701427996763" class="icon" viewbox="0 0 1661 1024"
+              version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8304">
+              <path
+                d="M618.088 918.022C604.325 977.204 542.39 1024 483.207 1024H86.82c-60.56 0-97.72-48.172-83.957-105.978l198.193-812.044C214.82 46.796 276.755 0 335.938 0h395.01c60.56 0 97.721 48.172 83.958 105.978L618.088 918.022z"
+                fill="#D7000F" p-id="8305"></path>
+              <path
+                d="M1044.755 918.022C1030.992 977.204 969.056 1024 908.497 1024H461.185c-60.559 0-97.72-48.172-83.957-105.978l198.194-812.044C589.185 46.796 651.12 0 711.68 0h447.312c60.559 0 97.72 48.172 83.957 105.978l-198.194 812.044z"
+                fill="#004097" p-id="8306"></path>
+              <path
+                d="M1450.777 918.022c-13.764 59.182-75.7 105.978-136.259 105.978h-395.01c-60.56 0-97.72-48.172-83.957-105.978l198.193-812.044C1047.508 46.796 1109.444 0 1168.626 0h395.01c60.56 0 97.721 48.172 83.958 105.978l-196.817 812.044z"
+                fill="#00959D" p-id="8307"></path>
+              <path
+                d="M287.766 271.14h-59.183l-35.785 169.29s-17.892 67.441 71.57 67.441c55.054 0 97.72-9.634 111.484-50.925l50.925-185.806h-50.925L327.68 448.688s-6.882 22.022-30.28 26.15c-22.021 6.882-50.925-4.128-46.795-26.15l37.16-177.548zM594.69 401.892l-22.022 108.732h49.548l26.15-108.732z m59.182-30.28c-2.752 11.012-19.268 20.646-34.408 20.646s-26.15-9.634-22.022-20.645c2.753-11.01 19.269-20.645 34.409-20.645 15.14-1.377 26.15 8.258 22.021 20.645z m525.764-104.601c37.161 9.634 56.43 45.42 20.645 103.226-38.538 63.311-134.882 53.677-134.882 53.677l-17.892 86.71H982.82l59.182-250.495c0 1.376 96.344-2.753 137.635 6.882z m-30.28 77.075c20.645-55.054-55.054-42.667-55.054-42.667L1075.035 384c42.666 0 60.559-2.753 74.322-39.914z m129.377 100.473c-6.882 22.022-20.646 39.914-33.033 39.914s-16.516-17.892-11.01-39.914c5.505-22.021 20.645-39.914 33.032-39.914s17.892 17.893 11.01 39.914z m-97.72 5.506c-12.388 89.462 63.31 60.559 67.44 55.053 2.753 2.753 4.129 5.506 9.634 5.506h55.054l31.656-139.011-57.806 9.634c-16.517-22.021-93.592-12.387-105.979 68.818z m192.687-75.7l55.054-9.634 4.13 79.828 34.408-72.946 55.053-9.635s-139.01 243.613-144.516 251.871c-5.505 8.259-8.258 15.14-16.516 15.14h-42.666l5.505-28.903 13.763-1.376 50.925-81.205-15.14-143.14zM696.54 677.162l9.634-30.28h132.13l-9.635 30.28h-53.677l-8.258 28.904h52.3l-9.634 30.28h-52.3l-12.388 42.666c-2.753 6.881 4.13 9.634 13.763 9.634h26.151l-8.258 26.15h-61.936c-15.14 0-23.397-8.257-17.892-24.773l16.516-55.054h-34.408l9.634-30.28h34.409l8.258-28.903H696.54v1.376z m9.634-41.29l6.882-23.398 13.764-1.376c6.881 0 11.01-6.882 13.763-11.011l11.01-26.15h49.55l-8.259 20.645h55.054l-8.258 28.903h-71.57c-8.258 11.01-22.022 13.763-33.032 13.763l-28.904-1.376z m166.538-59.183h41.29l-5.505 17.893s26.15-17.893 53.677-17.893h74.323l-33.032 108.731c-2.753 12.387-13.764 19.27-33.033 19.27H880.97l-23.398 75.698c-1.376 4.13 0 6.882 5.506 6.882h24.774l-6.882 27.527h-52.3c-16.516 0-20.645-12.387-17.892-23.398l61.935-214.71z m12.387 99.097h67.441c5.505 0 8.258-2.753 8.258-6.882l5.505-12.387h-74.322l-6.882 19.269z m12.387 119.742l6.882-82.58h41.29l-1.376 17.892h11.01c5.506 0 8.259-2.753 8.259-6.882l2.752-11.01h34.409l-5.505 16.515c-5.506 13.764-15.14 22.022-31.656 22.022h-22.022l-1.376 30.28c0 5.505 4.129 6.881 12.387 6.881h20.645l-6.882 23.398h-48.172c-15.14 2.753-22.021-2.753-20.645-16.516z m33.032-165.161h44.043l6.882-22.022h-74.322l-9.635 28.903c-1.376 0 17.893-6.881 33.032-6.881z m286.28 41.29l9.634-30.28h148.646l-9.635 30.28h-46.795l-9.635 24.774h46.796l-9.635 30.28h-52.3l-5.506 15.14h19.269l5.505 39.913c1.376 4.13 4.13 5.506 9.635 5.506h8.258l-9.635 28.903h-27.527c-15.14 1.376-23.398-4.129-23.398-13.763l-6.881-33.033-24.774 35.785c-5.506 9.635-13.764 13.764-26.151 12.387h-48.172l8.258-28.903h19.269c5.505 0 9.634-2.753 15.14-6.882l38.537-53.677h-46.795l9.634-30.28h50.925l8.258-24.774-50.925-1.376z"
+                fill="#FFFFFF" p-id="8308"></path>
+              <path
+                d="M1081.916 772.129h37.162l9.634-33.032h-37.161l-9.635 33.032z m66.065-97.72h-37.161l-9.635 33.032h37.161l9.635-33.032z m20.645-63.312h-37.161l-9.635 33.032h37.162l9.634-33.032z m140.387-11.011l-8.258 28.903h-38.538c-12.387 1.377-19.268-4.129-19.268-16.516V598.71l-31.656 12.387-49.549 161.032h16.516l-8.258 30.28h-13.763l-4.13 13.763h-44.042l4.129-13.763h-100.473l8.258-26.15 11.01-5.506 60.56-195.441h46.795l-6.881 17.892s28.903-17.892 45.42-17.892h108.73l1.377 16.516c0 4.129 2.752 6.882 6.881 6.882h15.14v1.376z m-500.99-155.527c-11.01 38.538-39.913 71.57-89.462 71.57-34.408 0-59.182-22.021-48.172-74.323 8.259-42.666 44.043-75.698 83.957-75.698 41.29-1.377 70.194 22.021 53.678 78.451z m-57.806-48.172c-15.14 0-26.15 20.645-31.656 44.043-5.505 23.398-2.752 42.667 12.388 42.667s26.15-19.269 31.656-42.667c4.129-23.398 1.376-44.043-12.388-44.043z m-222.967-26.15c-13.764 2.752-27.527 9.634-39.914 16.516l5.505-22.022-57.806 11.01-26.15 134.883h48.171l24.774-99.097c13.764-12.387 33.033-11.01 23.398 26.15l-15.14 72.947h52.301l22.022-104.602c5.505-31.656-13.763-39.914-37.161-35.785z m412.903 0c-13.764 2.752-27.527 9.634-39.914 16.516l5.505-22.022-57.806 11.01-26.15 134.883h48.171l24.775-99.097c13.763-12.387 33.032-11.01 23.397 26.15l-15.14 72.947h52.302l22.021-104.602c5.506-31.656-13.763-39.914-37.161-35.785z"
+                fill="#FFFFFF" p-id="8309"></path>
+            </svg> 银行卡支付</div>
+        </div>
+        <div><input type="radio" name="payMode" value="2" checked="checked" lay-filter="pay-radio-filter" />
+          <div lay-radio=""><svg width="20" height="20" t="1701428045575" class="icon" viewbox="0 0 1024 1024"
+              version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="9350">
+              <path
+                d="M654.144 161.088c125.76 68.512 210.944 199.84 210.944 350.816 0 151.04-85.184 282.304-210.944 350.848 188-11.296 336.96-163.84 336.96-350.848 0-186.976-148.992-339.456-336.96-350.816z m160.512 350.816C814.656 317.568 653.792 160 455.328 160 256.864 160 96 317.568 96 511.904c0 194.368 160.864 351.936 359.328 351.936 198.464 0 359.328-157.536 359.328-351.936z m-211.2 61.696c17.024-0.192 29.952 11.264 29.952 31.872 0 20.576-12 32.576-29.952 31.84l-99.072-0.512v53.6c-0.48 28.64-17.408 42.944-48 42.944-30.272 0-47.712-13.952-49.056-42.944v-52.576H307.68c-18.56-1.312-30.432-12.64-30.432-34.368 0-21.76 11.84-28.48 30.432-29.856h99.648v-31.84l-99.648-0.512c-18.56-1.376-30.432-11.808-30.432-31.36s11.84-28.48 30.432-29.792h74.336l-69.184-119.328c-13.568-22.656-15.456-48.832 4.576-62.336 20.064-13.504 45.536-5.696 58.944 16.32l78.432 140.544 86.24-141.536c11.968-20.864 32.32-35.104 58.432-21.824 22.4 11.392 20.576 37.344 8.16 60.8l-80 127.36h75.872c17.888 1.376 29.92 7.648 29.92 29.824 0 22.176-12.544 30.976-30.432 32.32l-98.592 0.544v30.816h99.072z"
+                fill="#FF8848" p-id="9351"></path>
+            </svg> 余额支付</div>
+        </div>
+        <div class="pay-btn" onclick="payOrderBtn()">支付订单</div>
+      </div>
+      <script>
+        // 设置title
+        document.title = '典佑商城'
+        // 隐藏所有多余的自定义单选
+        // $("div[lay-radio]").hide();
+
+        // 订单信息
+        const orderInfo = JSON.parse(
+          window.localStorage.getItem("orderInfo")
+        );
+        console.log(orderInfo);
+
+        // token
+        //判断登录
+        let youFengToken = null;
+        $.post("/Basket/Index", function (data) {
+          //没有登录
+          if (data.location) {
+            youFengToken = null;
+            const pathname = window.location.pathname.split("/");
+            // 跳转至登录页面
+            window.location = "/account/signin?returnUrl=/product/" + pathname[pathname.length - 1]
+          }
+          //已经登录
+          else {
+            youFengToken = localStorage.getItem('youFengToken');
+            // 商品详情
+            $.ajax({
+              type: "POST",
+              url: "/api/BindProductDetail",
+              headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                TokenValue: youFengToken,
+              },
+              data: JSON.stringify({
+                ProductID: orderInfo.shopId,
+              }),
+              success(res) {
+                const product = res.data;
+                const imageUrl = product.product.imageUrl.startsWith("~")
+                  ? product.product.imageUrl.substring(1)
+                  : product.product.imageUrl;
+                $("tbody[data-name=product]").html(`
+                          <tr>
+                              <td>
+                                  <img style="width: 50px; height: 50px;object-fit: cover;margin-right: 10px;" src="${imageUrl}" />
+                                  ${orderInfo.shopName}
+                              </td>
+                              <td>￥${product.product.price}</td>
+                              <td>${orderInfo.Amount}</td>
+                              <td>￥${orderInfo.Money}</td>
+                          </tr>
+                      `);
+                $("div[data-name=total]").html(`
+                          <span>共 ${orderInfo.Amount} 个商品</span>
+                          <span>
+                              总价：<span style="font-size: 20px;color: red;">￥${orderInfo.Money}</span>
+                          </span>
+                      `);
+              },
+            });
+          }
+        });
+
+        // 获取余额
+        let walletInfo = null;
+        const getWalletInfo = () => {
+          return new Promise((resolve) => {
+            $.ajax({
+              type: "GET",
+              url: "/api/getFundSummary",
+              headers: {
+                TokenValue: youFengToken,
+              },
+              success(res) {
+                walletInfo = res.data;
+                resolve();
+              },
+            });
+          });
+        };
+
+        // 收货地址
+        const address = JSON.parse(window.localStorage.getItem("address"));
+        if (address) {
+          $("#address").html(`
+              <span style="min-width: 80px;line-height: 25px;">${address.name}</span>
+              <span style="min-width: 120px;line-height: 25px;">${address.mobile}</span>
+              <span style="opacity: 0.5">
+                  ${address.province}${address.city}${address.country}${address.detail}
+              </span>
+          `);
+        }
+
+        // 支付金额
+        let startPay = false
+        const payOrder = (zftype) => {
+          if (!address) {
+            layer.open({
+              type: 1,
+              title: false,
+              shadeClose: true,
+              area: ['420px', '180px'], // 宽高
+              content: `
+              <div style="padding: 11px;height: 100%;display: flex;justify-content: space-around;align-items: center;box-sizing: border-box;">
+                  <div style="display: flex;align-items: center;gap: 20px;">
+                      <svg width="40" height="40" t="1701862081585" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10341" width="200" height="200"><path d="M512.165 0.315a511.835 511.835 0 1 0 511.52 511.835A512.229 512.229 0 0 0 512.165 0.315z m208.671 669.323a36.537 36.537 0 1 1-51.734 51.616L512.008 563.767 354.52 719.797a36.537 36.537 0 1 1-51.38-51.97l157.487-155.834L303.77 354.505a36.537 36.537 0 1 1 51.734-51.617L512.56 460.376l157.488-156.07a36.537 36.537 0 0 1 51.38 52.01L563.939 512.11z m0 0" fill="#d81e06" p-id="10342"></path></svg>
+                      <span style="font-size: 18px;">请选择地址</span>
+                  </div>
+              </div>
+              `
+            });
+            return
+          }
+          if (!startPay) {
+            startPay = true
+            $.ajax({
+              type: "POST",
+              url: "/api/ShopProduct",
+              headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                TokenValue: youFengToken,
+              },
+              data: JSON.stringify({
+                ...orderInfo,
+                addressId: address.id,
+                zftype
+              }),
+              success(res) {
+                layer.closeAll();
+                startPay = false
+                if (res.code == 200) {
+                  layer.open({
+                    type: 1,
+                    title: false,
+                    shadeClose: true,
+                    area: ['420px', '180px'], // 宽高
+                    content: `
+                              <div style="padding: 11px;height: 100%;display: flex;justify-content: space-around;align-items: center;box-sizing: border-box;">
+                                  <div style="display: flex;align-items: center;gap: 20px;">
+                                      <svg width="40" height="40" t="1701420372899" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4317"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m257 331.8L479.2 685.5c-15.8 15.9-41.5 15.9-57.3 0.1l-0.1-0.1L255 518.7c-15.8-15.8-15.8-41.5 0-57.3 15.8-15.8 41.5-15.8 57.3 0l138.2 138.2 261.1-261.1c15.8-15.8 41.5-15.8 57.3 0 15.9 15.8 15.9 41.5 0.1 57.3z" fill="#43B034" p-id="4318"></path></svg>
+                                      <span style="font-size: 18px;">购买完成</span>
+                                  </div>
+                              </div>
+                              `
+                  });
+                } else {
+                  layer.open({
+                    type: 1,
+                    title: false,
+                    shadeClose: true,
+                    area: ['420px', '180px'], // 宽高
+                    content: `
+                            <div style="padding: 11px;height: 100%;display: flex;justify-content: space-around;align-items: center;box-sizing: border-box;">
+                                <div style="display: flex;align-items: center;gap: 20px;">
+                                    <svg width="40" height="40" t="1701862081585" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10341" width="200" height="200"><path d="M512.165 0.315a511.835 511.835 0 1 0 511.52 511.835A512.229 512.229 0 0 0 512.165 0.315z m208.671 669.323a36.537 36.537 0 1 1-51.734 51.616L512.008 563.767 354.52 719.797a36.537 36.537 0 1 1-51.38-51.97l157.487-155.834L303.77 354.505a36.537 36.537 0 1 1 51.734-51.617L512.56 460.376l157.488-156.07a36.537 36.537 0 0 1 51.38 52.01L563.939 512.11z m0 0" fill="#d81e06" p-id="10342"></path></svg>
+                                    <span style="font-size: 18px;">购买失败</span>
+                                </div>
+                            </div>
+                            `
+                  });
+                }
+              },
+            });
+          }
+        };
+
+        // 支付按钮点击
+        const payOrderBtn = () => {
+          if ($("input[name=payMode]:checked").val() == 1) {
+            // 银行卡支付
+            layer.open({
+              type: 1,
+              title: false,
+              shadeClose: true,
+              area: ["700px", "450px"], // 宽高
+              content: `
+                          <div class="l-box">
+                              <div class="l-box-title">银行卡支付确认</div>
+                              <div style="padding-left: 20px;color: red;">
+                                  温馨提示：请务必使用已签约绑定的银行卡转账。
+                              </div>
+                              <div style="padding-left: 20px;color: red;border-bottom: 1px solid rgba(0, 0, 0, 0.1);padding-bottom: 10px;">
+                                  银行卡支付受理时间(周一至周六09:30-16:00)，请在该时间段内充值/转账，其他时间请勿操作!
+                              </div>
+                              <div class="l-box-msg">
+                                  <div style="display: flex;justify-content: space-between;align-items: center;">
+                                      账户名称：长沙典佑电子商务有限公司
+                                      <span style="border: 1px solid red;color: red;font-size: 13px;padding: 4px 8px;cursor:pointer;" onclick="clipboard('长沙典佑电子商务有限公司')">复制</span>
+                                  </div>
+                                  <div style="display: flex;justify-content: space-between;align-items: center;">
+                                      银行账号：8111601010500698999
+                                      <span style="border: 1px solid red;color: red;font-size: 13px;padding: 4px 8px;cursor:pointer;" onclick="clipboard('8111601010500698999')">复制</span>
+                                  </div>
+                                  <div style="display: flex;justify-content: space-between;align-items: center;">
+                                      开户银行：中信银行长沙香樟路支行
+                                      <span style="border: 1px solid red;color: red;font-size: 13px;padding: 4px 8px;cursor:pointer;" onclick="clipboard('中信银行长沙香樟路支行')">复制</span>
+                                  </div>
+                                  <div style="font-weight: bold;color: red;">
+                                      转账金额：￥${orderInfo.Money}
+                                  </div>
+                              </div>
+                              <div style="border-top: 1px solid rgba(0, 0, 0, 0.1);padding-top: 10px;margin-top: 10px;padding-left: 20px;color: red;">
+                                  请确保网络环境和设备的安全可靠，请勿在网吧等公共场所或使用他人设备进行支付，以避免个人信息的泄露。
+                              </div>
+                              <div style="display: flex;justify-content: space-around;">
+                                  <div onclick="payOrder()" style="margin: auto;padding: 10px 20px;background-color: red;display: inline-block;border-radius: 10px;color: white;margin-top: 20px;cursor:pointer;">
+                                      确认支付
+                                  </div>
+                              </div>
+                          </div>
+                          `,
+            });
+          } else if ($("input[name=payMode]:checked").val() == 2) {
+            // 获取钱包金额
+            getWalletInfo().then(() => {
+              // 余额支付
+              layer.open({
+                type: 1,
+                title: false,
+                shadeClose: true,
+                area: ["600px", "250px"], // 宽高
+                content: `
+                          <div class="l-box">
+                              <div class="l-box-title">余额支付确认</div>
+                              <div style="padding-left: 20px;color: red;">
+                                  
+                              </div>
+                              <div class="l-box-msg">
+                                  <div style="font-weight: bold;color: red;display: flex;justify-content: space-between;">
+                                      <span>可用余额：￥${walletInfo.availableFund || '--'}</span>
+                                      <span>支付金额：￥${orderInfo.Money}</span>
+                                  </div>
+                              </div>
+                              <div style="border-top: 1px solid rgba(0, 0, 0, 0.1);padding-top: 10px;margin-top: 10px;padding-left: 20px;color: red;">
+                                  请确保网络环境和设备的安全可靠，请勿在网吧等公共场所或使用他人设备进行支付，以避免个人信息的泄露。
+                              </div>
+                              <div style="display: flex;justify-content: space-around;">
+                                  <div onclick="payOrder(0)" style="margin: auto;padding: 10px 20px;background-color: red;display: inline-block;border-radius: 10px;color: white;margin-top: 20px;cursor:pointer;">
+                                      确认支付
+                                  </div>
+                              </div>
+                          </div>
+                          `,
+              });
+            });
+          }
+        };
+        // 跳转到编辑地址页面
+        const runToAddress = () => {
+          window.location = "/product/address";
+        };
+
+        // 复制
+        const clipboard = (text) => {
+          navigator.clipboard.writeText(text)
+          layer.open({
+            type: 1,
+            title: false,
+            shadeClose: true,
+            area: ['420px', '180px'], // 宽高
+            content: `
+              <div style="padding: 11px;height: 100%;display: flex;justify-content: space-around;align-items: center;box-sizing: border-box;">
+                  <div style="display: flex;align-items: center;gap: 20px;">
+                      <svg width="40" height="40" t="1701420372899" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4317"><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m257 331.8L479.2 685.5c-15.8 15.9-41.5 15.9-57.3 0.1l-0.1-0.1L255 518.7c-15.8-15.8-15.8-41.5 0-57.3 15.8-15.8 41.5-15.8 57.3 0l138.2 138.2 261.1-261.1c15.8-15.8 41.5-15.8 57.3 0 15.9 15.8 15.9 41.5 0.1 57.3z" fill="#43B034" p-id="4318"></path></svg>
+                      <span style="font-size: 18px;">复制成功</span>
+                  </div>
+              </div>
+              `
+          });
+        }
+      </script>
+    </div>
+  </div>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/less.js/4.2.0/less.js"></script>
+</html>

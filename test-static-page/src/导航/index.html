@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="/js/jquery-2.1.4/jquery.js?v=1da1ab30afcd628"></script>
+</head>
+
+<body>
+    <p>
+        <link href="/js/layui/css/layui.css" rel="stylesheet" />
+        <script src="/js/layui/layui.all.js"></script>
+    </p>
+    <div class="container top" style="min-width: 1274px;">
+        <div class="customservicebox">
+            <div class="customerservice">
+                <div class="btn"
+                    onclick="window.open('http://wpa.qq.com/msgrd?v=3&amp;uin=2564407565&amp;site=qq&amp;menu=yes')">
+                    在线客服</div>
+                <div class="btn" style="margin-top: 20px;"><a target="_self"
+                        href="/official-announcement?tab=sczn">商城指南</a></div>
+                <img src="/images/youfeng/time.png" />
+            </div>
+            <img class="right" id="right" src="/images/youfeng/right.png" style="cursor: pointer;" /> <img class="right"
+                id="left" src="/images/youfeng/lfet.png" style="display: none; cursor: pointer;" />
+        </div>
+        <div class="head" style="background-color: #d3282d;">
+            <div class="headcontent">
+                <div class="headleft"><img src="/images/youfeng/logody.png" onclick="goIndex()" /></div>
+                <div class="headright">
+                    <div class="LoginStatus"><a href="/account" target="_self">登录/注册</a></div>
+                    <div class="line"></div>
+                    <!-- 登出 -->
+                    <div class="SignOut"><a onclick="SignOut()" style="cursor: pointer;">注销</a></div>
+                    <div class="line"><img class="right" id="right" src="/images/youfeng/right.png"
+                            style="cursor: pointer;" /></div>
+                    <div class="jiaoyisuoLogin" hidden="hidden"><a href="/account" target="_self">交易所登录</a></div>
+                    <div class="line jiaoyisuoLogin"></div>
+                    <div><a target="_self" style="cursor: pointer;" onclick="goHistoryTrading()">我的订单</a></div>
+                    <div class="line"></div>
+                    <div><a target="_self" href="/product/shopping-cart">购物车</a></div>
+                    <div class="line"></div>
+                    <div><a target="_self" href="/official-announcement?tab=lxwm">联系客服</a></div>
+                    <div class="line"></div>
+                    <div><a target="_self" href="/official-announcement?tab=cjwt">帮助中心</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="nav">
+            <div class="navheader">
+                <div class="navheader-left">
+                    <div class="allclasic"><img src="/images/youfeng/fenlei.png"
+                            style="vertical-align: -2px; color: black;" /> 
+                        <a style="color: #0b0b0b;" target="_self" href="/product">全部分类</a></div>
+                    <!-- <ul class="updownul" style="display: none;">
+                        <li>
+                            <p><a style="color: #0b0b0b;" target="_self" href="/product/cate-11"><img
+                                        src="/images/youfeng/youpiao.png" />邮票</a></p>
+                        </li>
+                        <li>
+                            <p><a style="color: #0b0b0b;" target="_self" href="/product/cate-8"><img
+                                        src="/images/youfeng/money.png" />钱币</a></p>
+                        </li>
+                        <li>
+                            <p><a style="color: #0b0b0b;" target="_self" href="/product/cate-6"><img
+                                        src="/images/youfeng/message.png" />邮资封片</a></p>
+                        </li>
+                        <li>
+                            <p style="color: #0b0b0b;"><img src="/images/youfeng/card.png" /> 集藏卡</p>
+                        </li>
+                        <li>
+                            <p><a style="color: #0b0b0b;" target="_self" href="/product/cate-10"><img
+                                        src="/images/youfeng/art.png" />艺术器具</a></p>
+                        </li>
+                        <li>
+                            <p style="color: #0b0b0b;"><img src="/images/youfeng/shuhua.png" /> 书画艺术</p>
+                        </li>
+                        <li>
+                            <p style="color: #0b0b0b;"><img src="/images/youfeng/yishu.png" /> 艺术衍生品</p>
+                        </li>
+                        <li>
+                            <p><a style="color: #0b0b0b;" target="_self" href="/product"><img
+                                        src="/images/youfeng/more.png" />更多</a></p>
+                        </li>
+                    </ul> -->
+                </div>
+                <div class="navheader-right">
+                    <div><a style="color: #0b0b0b;" target="_self" href="/index">首页</a></div>
+                    <div><a style="color: #0b0b0b;" target="_self" href="/jnyp">邮票专区</a></div>
+                    <div><a style="color: #0b0b0b;" target="_self" href="/yzfp">封片专区</a></div>
+                    <div><a style="color: #0b0b0b;" target="_self" href="/scqb">钱币专区</a></div>
+                    <div><a style="color: #0b0b0b;" target="_self" href="/official-announcement">公示中心</a></div>
+                    <div><a style="color: #0b0b0b;" target="_self" href="/official-announcement?tab=zxzx">资讯中心</a></div>
+                    <div><a style="color: #0b0b0b;" target="_self" href="/official-announcement?tab=sczn">商城指南</a></div>
+                </div>
+                <div class="secondhead">
+                    <div class="search">
+                        <div id=""><img src="/images/youfeng/search.png" /><input type="text"
+                                placeholder="请输入想要搜索的藏品或代码" id="jumpSearchcollection"
+                                style="width: 197px; height: 44px;" maxlength="30" oninput="inputCodeName(this)" />
+                        </div>
+                        <span onclick="jumpSearchcollection()" style="cursor: pointer;">搜索</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p>
+            <script>
+                // 跳转至搜索页面
+                function jumpSearchcollection() {
+                    // 先把搜索框的内容存入本地缓存
+                    sessionStorage.setItem("searchcollection-CodeName", $("#jumpSearchcollection").val())
+                    // 如果在搜索页就不跳转
+                    if (window.location.pathname != "/searchcollection") {
+                        window.location = "/searchcollection"
+                    } else {
+                        GetProductLists()
+                    }
+                }
+                // 输入藏品名称
+                function inputCodeName(_this) {
+                    sessionStorage.setItem("searchcollection-CodeName", _this.value)
+                    if (window.location.pathname == "/searchcollection") {
+                        GetProductListsParam.CodeName = _this.value;
+                    }
+                }
+                // 登出
+                function SignOut() {
+                    $.ajax({
+                        url: "/account/SignOut",
+                        type: "GET",
+                        success: function (res) {
+                            window.location = "/account/signin"
+                        }
+                    });
+                }
+                $(function () {
+                    // 将本地缓存的搜索框内容 回显上去
+                    if (sessionStorage.getItem("searchcollection-CodeName")) {
+                        $("#jumpSearchcollection").val(
+                            sessionStorage.getItem("searchcollection-CodeName")
+                        );
+                    }
+                    // 监听搜索框的回车键事件
+                    $("#jumpSearchcollection").on("keyup", function () {
+                        if (event.keyCode == "13") {
+                            //回车执行查询
+                            jumpSearchcollection()
+                        }
+                    });
+                })
+            </script>
+        </p>
+    </div>
+</body>
+
+</html>
