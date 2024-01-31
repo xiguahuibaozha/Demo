@@ -1,3 +1,5 @@
+import './class.dart';
+
 class Cat {
   final String name;
   final int age;
@@ -17,7 +19,7 @@ class Cat {
     生日：$_birthday
   ''';
 
-  set birthday(DateTime time) => _birthday = time;
+  void set birthday(DateTime time) => _birthday = time;
 
   @override
   String toString() => '$name,$age,$type,$_birthday';
@@ -26,6 +28,14 @@ class Cat {
 class Dog {
   String name;
   Dog(this.name);
+}
+
+// base 关键字修饰的class无法在此文件外被访问
+base class mouse{}
+
+void fun_cat(){
+  Point.name = 'lisi cat';
+  print('fun ${Point.name}');
 }
 
 void main(){

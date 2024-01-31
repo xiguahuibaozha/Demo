@@ -1,12 +1,24 @@
 import 'dart:ffi';
-
+import './class.dart' as P;
 import './cat.dart';
 import './cat.dart' as animal hide Dog;
+import 'exception.dart';
 
 // late: 通常 Dart 的语义分析可以检测非空变量在使用之前是否被赋值, 如果你确定变量在使用之前已设置，但 Dart 推断错误的话，可以将变量标记为 late 来解决这个问题
 late String l;
 
+
+// typedef
+typedef MyFun<T> = T Function(T a);
+
+// var 类型推断，如果没有初始值可以变成任何类型。
+// Object 任意类型，编译阶段检查类型  ts => unknown
+// dynamic 任意类型，编译阶段不检查类型  ts => any
 main(){
+  P.fun_class();
+  fun_cat();
+  print(P.Point.name);
+
   // string 在 Dart 中通过调用就对象的 toStri ng() 方法来得到对象相应的字符串。
   String b = '1.222';
   String b1 = '价格是：$b'; //字符串可以通过 ${expression} 的方式内嵌表达式。 如果表达式是一个标识符，则 {} 可以省略
@@ -177,4 +189,18 @@ main(){
   var login = 'Manager';
   var nav = ['Home', 'Furniture', 'Plants', if (login case 'Manager') 'Inventory'];
   print(nav);
+
+  T first<T>(List<T> ts) {
+    // Do some initial work or error checking, then...
+    T tmp = ts[0];
+    // Do some additional checking or processing...
+    return tmp;
+  }
+
+  String firstName = first<String>(['name']);
+  print('firstName');
+
+  // typedef
+  MyFun<String> myfun = (String a) => a;
+  print(myfun('aaa'));
 }
