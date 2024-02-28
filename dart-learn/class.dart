@@ -45,9 +45,9 @@ base class Point{
 
 // exntends 与 implements 区别：implements不会调用父类构造方法
 class Person{
-  final String name;
+  String? name;
 
-  Person(this.name);
+  Person({this.name});
 
   String greet(String who) => 'Hello, $who. I am $name.';
 
@@ -58,7 +58,7 @@ class Person{
 
 // 命名构造函数
 class Student extends Person{
-  Student(super.a);
+  Student({super.name});
 
   Student.fromJson(String name):super.fromJson(name){
     print('student $name');
@@ -82,7 +82,7 @@ abstract class Action{
 
 class Impostor implements Person, Action{
   @override
-  String name;
+  String? name;
 
   @override
   String field;
@@ -229,7 +229,7 @@ main(){
   print(p7.add_n);
 
   // extends
-  Student s = Student('zhangsan');
+  Student s = Student(name: 'zhangsan');
   print(s.name);
   print(s.greet('lisi'));
 

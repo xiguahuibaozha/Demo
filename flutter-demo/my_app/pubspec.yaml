@@ -1,3 +1,4 @@
+# pubspec.yaml 文件指定与您的应用相关的基本信息，例如其当前版本、依赖项以及其随附的资源。
 name: my_app
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
